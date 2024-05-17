@@ -17,10 +17,11 @@
         <p class="loc_label">Location 1: </p>
 
         <label for="text">City: </label>
-        <input type="text" id="fname" name="city_select1" required>
+        <input type="text" id="fname" name="city_select1" required value="portland">
 
         <label for="text">State: </label>
         <select name="state_select1" id="state_select1" required>
+            <option value="Oregon">Oregon</option>
             <option value="Alabama">Alabama</option>
             <option value="Alaska">Alaska</option>
             <option value="Arizona">Arizona</option>
@@ -81,10 +82,11 @@
         <p class="loc_label">Location 2: </p>
 
         <label for="text">City: </label>
-        <input type="text" id="lname" name="city_select2" required>
+        <input type="text" id="lname" name="city_select2" required value="portland">
 
         <label for="text">State: </label>
         <select name="state_select2" id="state_select2" required>
+            <option value="Oregon">Oregon</option>
             <option value="Alabama">Alabama</option>
             <option value="Alaska">Alaska</option>
             <option value="Arizona">Arizona</option>
@@ -141,7 +143,7 @@
 
         <br><br>
 
-        <input type="radio" id="F_type" name="temp_type" value="Fahrenheit" required>
+        <input type="radio" id="F_type" name="temp_type" value="Fahrenheit" required checked>
         <label for="temp_type">Fahrenheit</label>
         
         <br>
@@ -155,29 +157,7 @@
 
         <input type="submit" value="Compare">
 
-        <div id="table_holder">
-
-
-            <table>
-                <tr>
-                  <th>Company</th>
-                  <th>Contact</th>
-                  <th>Country</th>
-                </tr>
-                <tr>
-                  <td>Alfreds Futterkiste</td>
-                  <td>Maria Anders</td>
-                  <td>Germany</td>
-                </tr>
-                <tr>
-                  <td>Centro comercial Moctezuma</td>
-                  <td>Francisco Chang</td>
-                  <td>Mexico</td>
-                </tr>
-              </table>
-
-
-        </div>
+        <div id="table_holder"></div>
 
       </form>
     
