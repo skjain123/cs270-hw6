@@ -1,9 +1,17 @@
+/* 
+Name: Sunil Jain
+Date: 5/19/24
+Course: Intro to Web Development = CS290
+Professor: Prof. Coffman
+*/
+
+// when the document loads, do this
 document.addEventListener('DOMContentLoaded', function () {
     // get the user input
     get_user_input()
 });
 
-// clear the table holder's child elements
+// clear the child elements of whatever element of the specified id 
 function clear_children (input) {
     let elem = document.getElementById(input);
 
@@ -14,6 +22,7 @@ function clear_children (input) {
     }
 }
 
+// sets the form submission's submit functionality-- gets user input and uses it for api calls.
 function get_user_input () {
 
     // default values for the first location
@@ -86,6 +95,7 @@ function get_user_input () {
     });
 }
 
+// inserts a red paragraph that displays an error when the user does not input a city
 function insert_error(message, input_id) {
     const error_elem = document.createElement('p'); // create display element
     
@@ -99,6 +109,7 @@ function insert_error(message, input_id) {
     input_elem.append(error_elem);
 }
 
+// fetches api, handles good and bad cases -- good: create table, bad-display a red error message
 function call_api(api_link, city, state) {
     fetch(api_link) // call the first api link
     .then(response => {
@@ -108,13 +119,14 @@ function call_api(api_link, city, state) {
         return response.json();
     })
     .then(data => { // good
-        print_data(data, city, state);
+        print_data(data, city, state); // create table
     })
     .catch(error => { // error
-        display_not_found(city, state)
+        display_not_found(city, state); // display red error message
     });
 }
 
+// displays a red error message instead of creating a table.
 function display_not_found(city, state) {
     const new_display = document.createElement("p");
     new_display.textContent = `Unable to locate ${city}, ${state}`
@@ -124,10 +136,10 @@ function display_not_found(city, state) {
     table_holder.append(new_display);
 }
 
+// sets up the table by creating the first columns, defining the variables in the table. Also creates the table title
 function setup_table (table_holder, city, state) {
     table_holder.append(document.createElement("br")); // spacing 
     /* table_holder.append(document.createElement("br")); */
-
 
     const table_title = document.createElement("h1"); // creates a header to display the location
     table_title.textContent = city + ", " + state;
@@ -149,6 +161,7 @@ function setup_table (table_holder, city, state) {
     return new_table;
 }
 
+// inserts the data in to the specified table row
 function insert_data (new_table, row_num, text_content) {
     const rows = new_table.getElementsByTagName("tr"); // get the table rows
 
@@ -157,27 +170,34 @@ function insert_data (new_table, row_num, text_content) {
     rows[row_num].appendChild(new_data); // fill and append that data to the row
 }
 
-
+// creates a full table in the case that the user inputted a good location
 function print_data (curr_data, city, state) {
 
+    // formatting the data_txt api fetch to the days of the week
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
+    // count every 8 because the api updates every 3 hrs (3 hrs * 8 = 24 hrs = 1 day)
     let counter = 0;
-    let output = "";
 
+    // for getting the lowest/highest temp in a day, and getting the total rain in the day.
     let low_temp = 9999;
     let high_temp = 0;
     let total_rain = 0;
 
+    // get the div that contains tables
     const table_holder = document.getElementById("table_holder"); // get the table holder
 
+    // create new table and its first data column
     const new_table = setup_table(table_holder, city, state); // set up the table title and first column
     
+    // get all the rows to insert data into by day
     const rows = new_table.getElementsByTagName("tr"); // get all table rows
 
+    // for counting the weather occurrances to decide what the outlook is today.
     let weather_arr = [];
     let weather_count = [];
 
+    // go through all the 3hr-interval data
     for (elem of curr_data.list) {
 
         // find the lowest temperature of the day
@@ -212,6 +232,7 @@ function print_data (curr_data, city, state) {
                 }
             }
             
+            // for formatting  dt_txt -> days of the week
             const date = new Date(elem.dt_txt);
 
             // add the day of the week, highest temp, lowest temp for each day
@@ -235,6 +256,7 @@ function print_data (curr_data, city, state) {
             weather_arr = [];
             weather_count = {};
         } else {
+            // increment counter
             counter++;
         }
     }
