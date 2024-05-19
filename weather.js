@@ -7,13 +7,9 @@ document.addEventListener('DOMContentLoaded', function () {
 function clear_children (input) {
     let elem = document.getElementById(input);
 
-    
-
     if (elem) {
-        console.log("to remove: " + elem.textContent);
         while (elem.firstChild) { 
-            elem.removeChild(elem.firstChild); 
-            /* elem.firstChild.remove();  */
+            elem.removeChild(elem.firstChild);
         }
     }
 }
@@ -140,7 +136,7 @@ function setup_table (table_holder, city, state) {
 
     const new_table = document.createElement("table"); //create table
     
-    const headers = ['Day', 'High', 'Low', 'Outlook'];
+    const headers = ['Day', 'High', 'Low', 'Rainfall', 'Outlook'];
     headers.forEach(header_text => { // for each header, create a row
         const header = document.createElement('tr');
         header.textContent = header_text; // populate row with the header
@@ -171,6 +167,7 @@ function print_data (curr_data, city, state) {
 
     let low_temp = 9999;
     let high_temp = 0;
+    let total_rain = 0;
 
     const table_holder = document.getElementById("table_holder"); // get the table holder
 
@@ -191,6 +188,11 @@ function print_data (curr_data, city, state) {
         // find the highest temperature of the day
         if (high_temp < elem.main.temp_max) {
             high_temp = elem.main.temp_max;
+        }
+
+        // add rain if there is rain
+        if (elem.rain && elem.rain["3h"]) {
+            total_rain += elem.rain["3h"];
         }
 
         // find the most occurring weather condition in the day
@@ -216,13 +218,14 @@ function print_data (curr_data, city, state) {
             insert_data(new_table, 0, days[date.getDay()]);
             insert_data(new_table, 1, high_temp);
             insert_data(new_table, 2, low_temp);
+            insert_data(new_table, 3, Math.round(total_rain * 100) / 100);
 
             // add the icon image to the table outlook
             outlook = document.createElement("td");
             new_img = document.createElement("img");
             new_img.src = `./img/${weather_arr[highest_index]}.png`;
             outlook.appendChild(new_img);
-            rows[3].appendChild(outlook);
+            rows[4].appendChild(outlook);
 
 
             // reset variables per day
