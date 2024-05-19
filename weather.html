@@ -10,16 +10,20 @@
 <body>
 
     <header>
-        <h3>Weather Comparison</h3>
+        <h1>Weather Comparison</h1>
     </header>
+
+    <br>
 
     <form method="get" id="weather_form">
         <p class="loc_label">Location 1: </p>
 
         <label for="text">City: </label>
-        <input type="text" id="fname" name="city_select1" required value="portland">
+        <input type="text" id="city1_input" name="city_select1" value="portland">
 
-        <label for="text">State: </label>
+        <div id="error_display1"></div>
+
+        <label for="text" id="">State: </label>
         <select name="state_select1" id="state_select1" required>
             <option value="Oregon">Oregon</option>
             <option value="Alabama">Alabama</option>
@@ -79,12 +83,18 @@
         <br>
         <br>
 
+        <div class="loc_label">
+
+        </div>
+
         <p class="loc_label">Location 2: </p>
 
         <label for="text">City: </label>
-        <input type="text" id="lname" name="city_select2" required value="portland">
+        <input type="text" id="city2_input" name="city_select2" value="portland">
 
-        <label for="text">State: </label>
+        <div id="error_display2"></div>
+
+        <label for="text" id="error_after1">State: </label>
         <select name="state_select2" id="state_select2" required>
             <option value="Oregon">Oregon</option>
             <option value="Alabama">Alabama</option>
@@ -158,6 +168,13 @@
         <input type="submit" value="Compare">
 
         <div id="table_holder"></div>
+
+        <br>
+
+        <footer>
+          <footer>&copy; Created by Sunil Jain for CS290 at Oregon State
+            University at 5/18/24.</footer>
+        </footer>
 
       </form>
     

@@ -1,15 +1,20 @@
 document.addEventListener('DOMContentLoaded', function () {
-    console.log("document loaded");
-
+    // get the user input
     get_user_input()
 });
 
 // clear the table holder's child elements
-function clear_tableholder () {
-    let elem = document.getElementById("table_holder"); 
-    while (elem.firstChild) { 
-        elem.removeChild(elem.firstChild); 
-        elem.firstChild.remove(); 
+function clear_children (input) {
+    let elem = document.getElementById(input);
+
+    
+
+    if (elem) {
+        console.log("to remove: " + elem.textContent);
+        while (elem.firstChild) { 
+            elem.removeChild(elem.firstChild); 
+            /* elem.firstChild.remove();  */
+        }
     }
 }
 
@@ -32,13 +37,15 @@ function get_user_input () {
         event.preventDefault();
 
         // clear table_holder child elements
-        clear_tableholder();
+        clear_children("table_holder");
+        clear_children("error_display1");
+        clear_children("error_display2");
         
         // get user input form
         const form_data = new FormData(weather_form);
 
         for (let [key, value] of form_data.entries()) {
-            console.log(key, value);
+            /* console.log(key, value); */
 
             // get user data
             city1 = form_data.get("city_select1");
@@ -67,40 +74,63 @@ function get_user_input () {
         // second location api call link
         const api2 = "http://api.openweathermap.org/data/2.5/forecast?q=" + city2 + "," + state2 + ",US&limit=1&appid=" + apiKey + "&units=" + unit_type;
 
-        // call api links and pass through the cities and states user inputted 
-        call_api(api1, api2, city1, state1, city2, state2);
+        // call api link 1 if the user inputted a city, if they didnt, display a error message to the screen
+        if (city1.length > 0) {
+            call_api(api1, city1, state1);
+        } else {
+            insert_error(" Enter a city ", "error_display1");
+        }
+        
+        // call api link 2 if the user inputted a city, if they didnt, display a error message to the screen
+        if (city2.length > 0) {
+            call_api(api2, city2, state2);
+        } else {
+            insert_error(" Enter a city ", "error_display2");
+        }
     });
 }
 
-function call_api(api1, api2, city1, state1, city2, state2) {
-    fetch(api1) // call the first api link
+function insert_error(message, input_id) {
+    const error_elem = document.createElement('p'); // create display element
+    
+    // set the content, color to red, remove the newline character, and mark it to be removed.
+    error_elem.textContent = message; 
+    error_elem.style.color = "red";
+    error_elem.style.display = "inline"
+    error_elem.id = "to_remove";
+    
+    const input_elem = document.getElementById(input_id);
+    input_elem.append(error_elem);
+}
+
+function call_api(api_link, city, state) {
+    fetch(api_link) // call the first api link
     .then(response => {
         if (!response.ok) { // bad
             throw new Error('Response was not ok');
         }
         return response.json();
     })
-    .then(data1 => { // good
-        print_data(data1, city1, state1);
-        return fetch(api2); // call the second api link
-    })
-    .then(response => { 
-        if (!response.ok) { // bad for second
-            throw new Error('Response was not ok');
-        }
-        return response.json();
-    })
-    .then(data2 => { // good for second
-        print_data(data2, city2, state2);
+    .then(data => { // good
+        print_data(data, city, state);
     })
     .catch(error => { // error
-        console.error('Error:', error);
+        display_not_found(city, state)
     });
+}
+
+function display_not_found(city, state) {
+    const new_display = document.createElement("p");
+    new_display.textContent = `Unable to locate ${city}, ${state}`
+    new_display.style.color = "red";
+
+    const table_display = document.getElementById("table_holder");
+    table_holder.append(new_display);
 }
 
 function setup_table (table_holder, city, state) {
     table_holder.append(document.createElement("br")); // spacing 
-    table_holder.append(document.createElement("br"));
+    /* table_holder.append(document.createElement("br")); */
 
 
     const table_title = document.createElement("h1"); // creates a header to display the location
@@ -131,8 +161,10 @@ function insert_data (new_table, row_num, text_content) {
     rows[row_num].appendChild(new_data); // fill and append that data to the row
 }
 
-const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
 function print_data (curr_data, city, state) {
+
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
     let counter = 0;
     let output = "";
